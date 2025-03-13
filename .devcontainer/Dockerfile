@@ -6,10 +6,11 @@ WORKDIR /workspaces/Dashboard_Ex
 
 
 COPY ./ ./
-RUN npm ci
 
 # app 폴더로 이동
 WORKDIR /workspaces/Dashboard_Ex/app
+
+RUN npm ci
 
 # 기본 명령어
 CMD ["npm", "run", "dev"]
