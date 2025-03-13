@@ -5,7 +5,7 @@ FROM mcr.microsoft.com/devcontainers/javascript-node:22
 WORKDIR /workspaces/Dashboard_Ex
 
 # package.json과 package-lock.json만 먼저 복사 후 의존성 설치
-COPY ./app/package.json ./app/package-lock.json ./
+COPY app/package.json app/package-lock.json ./
 RUN npm ci
 
 
