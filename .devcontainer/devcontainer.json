@@ -1,28 +1,10 @@
 {
-    "name": "React Dev Container",
-    "build": {
-      "dockerfile": "Dockerfile"
-    },
-    "features": {
-      "ghcr.io/devcontainers/features/node:1": {
-        "version": "22"
-      }
-    },
-    "customizations": {
-      "vscode": {
-        "extensions": [
-          "esbenp.prettier-vscode",
-          "dbaeumer.vscode-eslint"
-        ]
-      }
-    },
-    "postCreateCommand": "npm install",
-    "forwardPorts": [5173],
-    "portsAttributes": {
-      "5173": {
-        "label": "Vite Dev Server",
-        "onAutoForward": "openBrowser"
-      }
-    }
-  }
-  
+  "name": "React with Vite",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "forwardPorts": [5173],
+  "postCreateCommand": "cd app && npm install",
+  "remoteUser": "node"
+}
