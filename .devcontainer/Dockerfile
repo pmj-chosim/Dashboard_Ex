@@ -28,3 +28,5 @@ USER node
 
 # 비sudo 사용자를 위한 디렉토리 생성
 RUN mkdir -p /home/node/.npm-global
+
+EXPOSE 3000
