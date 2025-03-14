@@ -1,23 +1,28 @@
-  # Node.js 22 사용
-  FROM mcr.microsoft.com/devcontainers/javascript-node:22
+# Use the official image as a parent image.
+FROM mcr.microsoft.com/devcontainers/base:ubuntu
 
-  # 작업 디렉토리 설정 (루트 디렉토리로 설정)
-  WORKDIR /workspaces/Dashboard_Ex
+# Set the Node.js version to install
+ARG NODE_VERSION=20
+ENV NVM_DIR=/usr/local/nvm
 
-  # app 디렉토리 생성
-  RUN mkdir -p app
+# Install Node.js
+RUN apt-get update \
+  && apt-get install -y curl gnupg \
+  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
+  && source $NVM_DIR/nvm.sh \
+  && nvm install $NODE_VERSION \
+  && nvm alias default $NODE_VERSION \
+  && nvm use default \
+  && npm install -g npm
 
-  # package.json과 package-lock.json을 app 디렉토리로 복사
-  COPY ./app/package*.json ./app/
+# Install dependencies
+COPY app/package*.json /app/
 
-  # 의존성 설치
-  RUN npm ci
+# Set working directory
+WORKDIR /app
 
-  # app 폴더의 나머지 파일들을 app 디렉토리로 복사
-  COPY ./app/ ./app/
+# Expose the port that the app runs in
+EXPOSE 3000
 
-  # app 폴더로 이동
-  WORKDIR /workspaces/Dashboard_Ex/app
-
-  # 기본 명령어
-  CMD ["npm", "run", "dev"]
+# Start the app
+CMD ["npm", "run", "dev"]
