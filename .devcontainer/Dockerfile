@@ -1,28 +1,30 @@
-# Use the official image as a parent image.
-FROM mcr.microsoft.com/devcontainers/base:ubuntu
+FROM node:22-bullseye
 
-# Set the Node.js version to install
-ARG NODE_VERSION=20
-ENV NVM_DIR=/usr/local/nvm
+# 타임존 설정
+ENV TZ=Asia/Seoul
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# Install Node.js
-RUN apt-get update \
-  && apt-get install -y curl gnupg \
-  && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash \
-  && source $NVM_DIR/nvm.sh \
-  && nvm install $NODE_VERSION \
-  && nvm alias default $NODE_VERSION \
-  && nvm use default \
-  && npm install -g npm
+# 필요한 도구 설치
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    wget \
+    vim \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies
-COPY app/package*.json /app/
+# 작업 디렉토리 설정
+WORKDIR /workspace
 
-# Set working directory
-WORKDIR /app
+# 비sudo 사용자를 위한 npm 전역 패키지 경로 설정
+ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
+ENV PATH=$PATH:/home/node/.npm-global/bin
 
-# Expose the port that the app runs in
-EXPOSE 3000
+# 필요한 전역 패키지 설치
+RUN npm install -g vite@latest eslint prettier
 
-# Start the app
-CMD ["npm", "run", "dev"]
+# 비sudo 사용자로 전환
+USER node
+
+# 비sudo 사용자를 위한 디렉토리 생성
+RUN mkdir -p /home/node/.npm-global
