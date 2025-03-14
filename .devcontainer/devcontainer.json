@@ -4,6 +4,7 @@
     "dockerfile": "Dockerfile",
     "context": ".."
   },
+  "workspaceFolder": "./app",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -22,7 +23,8 @@
   },
   "forwardPorts": [3000],
   "remoteUser": "node",
-  "postCreateCommand": "cd app && npm install",
+  "postCreateCommand": "npm install",
+  "postAttachCommand": "npm run dev",
   "features": {
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}
